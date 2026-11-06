@@ -1,0 +1,173 @@
+{
+  "title": "Auto Thermostat",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up an Auto Thermostat",
+        "description": "Choose what this thermostat controls and which sensors it should use.",
+        "data": {
+          "name": "Name",
+          "heater": "Heater switch",
+          "temperature_sensors": "Temperature sensors",
+          "persons": "People to track",
+          "ac_mode": "Cooling mode"
+        },
+        "data_description": {
+          "name": "Use a name that identifies the room.",
+          "heater": "The switch or input boolean that turns your heater on and off. In cooling mode, choose the cooling switch instead.",
+          "temperature_sensors": "Choose one or more temperature sensors. Available readings are averaged.",
+          "persons": "Optional. Home is used if anyone is home. If you leave this empty, Home is always used.",
+          "ac_mode": "Off for heating. Turn on only if the controlled switch runs a cooling device."
+        }
+      },
+      "presets": {
+        "title": "Set up the temperature presets",
+        "description": "Choose the temperatures for Home, Away and Sleep, and how long Boost should run.",
+        "data": {
+          "home_temp": "Home temperature",
+          "away_temp": "Away temperature",
+          "sleep_temp": "Sleep temperature",
+          "boost_duration": "Boost duration"
+        },
+        "data_description": {
+          "home_temp": "Used when somebody is home.",
+          "away_temp": "Used when all tracked people are away.",
+          "sleep_temp": "Used until you select Home or Away again.",
+          "boost_duration": "How many minutes Boost should keep the controlled switch on, subject to the cycle limits."
+        }
+      },
+      "control": {
+        "title": "Set up thermostat control",
+        "description": "These settings work like Generic Thermostat. Cycle times and keep-alive are in seconds. Set a duration to 0 to disable it.",
+        "data": {
+          "min_temp": "Minimum temperature",
+          "max_temp": "Maximum temperature",
+          "target_temp": "Manual temperature",
+          "initial_hvac_mode": "Initial HVAC mode",
+          "cold_tolerance": "Cold tolerance",
+          "hot_tolerance": "Hot tolerance",
+          "min_cycle_duration": "Minimum on time",
+          "max_cycle_duration": "Maximum on time",
+          "cycle_cooldown": "Cooldown after switching off",
+          "keep_alive": "Keep-alive interval",
+          "precision": "Temperature precision",
+          "target_temp_step": "Target temperature step"
+        },
+        "data_description": {
+          "min_temp": "Lowest target temperature allowed by the thermostat card.",
+          "max_temp": "Highest target temperature allowed by the thermostat card.",
+          "target_temp": "Used when you set a temperature manually and clear the presets.",
+          "initial_hvac_mode": "Use Off to leave the switch off until you enable the thermostat.",
+          "cold_tolerance": "Difference below the target required to start heating.",
+          "hot_tolerance": "Difference above the target required to stop heating.",
+          "min_cycle_duration": "How many seconds heating must stay on before a normal stop. Off mode and safety stops take priority.",
+          "max_cycle_duration": "Optional safety cap for one uninterrupted run. Applies to Boost too.",
+          "cycle_cooldown": "Minimum time in seconds to wait before restarting the switch.",
+          "keep_alive": "Optional time in seconds between repeat commands to the switch.",
+          "precision": "How precisely temperatures are displayed.",
+          "target_temp_step": "How much the target changes per card adjustment."
+        }
+      },
+      "button": {
+        "title": "Choose a Boost button",
+        "description": "Optional. Select a button event entity that reports short and long presses. Match its event_type values below. A short press starts or restarts Boost. A long press cancels it.",
+        "data": {
+          "button_event": "Button event entity",
+          "short_press": "Short press event type",
+          "long_press": "Long press event type"
+        },
+        "data_description": {
+          "button_event": "Choose an event.* entity. A plain button.* entity cannot report different press lengths.",
+          "short_press": "Usually press_end, but the value depends on your button integration.",
+          "long_press": "Usually long_press_end, but the value depends on your button integration."
+        }
+      }
+    },
+    "error": {
+      "invalid_temp_range": "Maximum temperature must be greater than minimum temperature.",
+      "temp_out_of_range": "The initial target and all preset temperatures must be within the configured limits.",
+      "invalid_cycle_range": "Maximum on time must be greater than minimum on time.",
+      "same_button_events": "Short and long press event types must be different."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Configure Auto Thermostat",
+        "description": "Choose which settings you want to change.",
+        "menu_options": {
+          "devices": "Heater, sensors and people",
+          "presets": "Temperatures and Boost",
+          "control": "Thermostat control",
+          "button": "Boost button"
+        }
+      },
+      "devices": {
+        "title": "Edit thermostat devices",
+        "description": "Choose which switch, temperature sensors and people to use.",
+        "data": {
+          "name": "Name",
+          "heater": "Heater switch",
+          "temperature_sensors": "Temperature sensors",
+          "persons": "People to track",
+          "ac_mode": "Cooling mode"
+        },
+        "data_description": {
+          "name": "Name shown for this thermostat.",
+          "heater": "Choose a switch or input boolean.",
+          "temperature_sensors": "Available readings are averaged.",
+          "persons": "Leave empty to stop automatic Home/Away switching.",
+          "ac_mode": "Controls a cooling device instead of a heater."
+        }
+      },
+      "presets": {
+        "title": "Edit temperature presets",
+        "description": "Change the preset temperatures or the Boost duration.",
+        "data": {
+          "home_temp": "Home temperature",
+          "away_temp": "Away temperature",
+          "sleep_temp": "Sleep temperature",
+          "boost_duration": "Boost duration"
+        }
+      },
+      "control": {
+        "title": "Edit thermostat control",
+        "description": "Cycle times and keep-alive are in seconds. Zero disables a duration.",
+        "data": {
+          "min_temp": "Minimum temperature",
+          "max_temp": "Maximum temperature",
+          "target_temp": "Manual temperature",
+          "initial_hvac_mode": "Initial HVAC mode",
+          "cold_tolerance": "Cold tolerance",
+          "hot_tolerance": "Hot tolerance",
+          "min_cycle_duration": "Minimum on time",
+          "max_cycle_duration": "Maximum on time",
+          "cycle_cooldown": "Cooldown after switching off",
+          "keep_alive": "Keep-alive interval",
+          "precision": "Temperature precision",
+          "target_temp_step": "Target temperature step"
+        }
+      },
+      "button": {
+        "title": "Edit Boost button",
+        "description": "Choose an event.* entity and specify the event type for each press.",
+        "data": {
+          "button_event": "Button event entity",
+          "short_press": "Short press event type",
+          "long_press": "Long press event type"
+        },
+        "data_description": {
+          "button_event": "Clear this to stop listening to the button.",
+          "short_press": "Press event that starts Boost.",
+          "long_press": "Press event that cancels Boost."
+        }
+      }
+    },
+    "error": {
+      "invalid_temp_range": "Maximum temperature must be greater than minimum temperature.",
+      "temp_out_of_range": "The initial target and all preset temperatures must be within the configured limits.",
+      "invalid_cycle_range": "Maximum on time must be greater than minimum on time.",
+      "same_button_events": "Short and long press event types must be different."
+    }
+  }
+}

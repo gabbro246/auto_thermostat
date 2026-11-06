@@ -1,0 +1,11 @@
+{
+  "domain": "auto_thermostat",
+  "name": "Auto Thermostat",
+  "codeowners": ["@gabbro246"],
+  "config_flow": true,
+  "documentation": "https://github.com/gabbro246/auto_thermostat",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "requirements": [],
+  "version": "0.1.0"
+}
