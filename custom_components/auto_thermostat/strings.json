@@ -9,15 +9,13 @@
           "name": "Name",
           "heater": "Heater switch",
           "temperature_sensors": "Temperature sensors",
-          "persons": "People to track",
-          "ac_mode": "Cooling mode"
+          "persons": "People to track"
         },
         "data_description": {
           "name": "Use a name that identifies the room.",
-          "heater": "The switch or input boolean that turns your heater on and off. In cooling mode, choose the cooling switch instead.",
+          "heater": "The switch or input boolean that turns your heater on and off.",
           "temperature_sensors": "Choose one or more temperature sensors. Available readings are averaged.",
-          "persons": "Optional. Home is used if anyone is home. If you leave this empty, Home is always used.",
-          "ac_mode": "Off for heating. Turn on only if the controlled switch runs a cooling device."
+          "persons": "Optional. Home is used if anyone is home. If you leave this empty, Home is always used."
         }
       },
       "presets": {
@@ -109,15 +107,13 @@
           "name": "Name",
           "heater": "Heater switch",
           "temperature_sensors": "Temperature sensors",
-          "persons": "People to track",
-          "ac_mode": "Cooling mode"
+          "persons": "People to track"
         },
         "data_description": {
           "name": "Name shown for this thermostat.",
           "heater": "Choose a switch or input boolean.",
           "temperature_sensors": "Available readings are averaged.",
-          "persons": "Leave empty to stop automatic Home/Away switching.",
-          "ac_mode": "Controls a cooling device instead of a heater."
+          "persons": "Leave empty to stop automatic Home/Away switching."
         }
       },
       "presets": {

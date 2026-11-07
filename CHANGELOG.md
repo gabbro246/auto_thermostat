@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+- Fixed an error that prevented thermostat setup from continuing.
+- Focused Auto Thermostat on heating and removed the cooling mode.
+
 ## 0.1.0
 
 - Initial version of Auto Thermostat.

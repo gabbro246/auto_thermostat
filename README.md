@@ -8,7 +8,7 @@ Create separate thermostats for different rooms, all controlled through Home Ass
 
 ### Temperature sensors
 
-Choose one or more temperature sensors. Auto Thermostat uses their average reading to control your heating or cooling.
+Choose one or more temperature sensors. Auto Thermostat uses their average reading to control your heating.
 
 ### Home, Away and Sleep
 

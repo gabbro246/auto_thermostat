@@ -34,7 +34,6 @@ from homeassistant.util import dt as dt_util
 from homeassistant.util.unit_conversion import TemperatureConverter
 
 from .const import (
-    CONF_AC_MODE,
     CONF_AWAY_TEMP,
     CONF_BOOST_DURATION,
     CONF_BUTTON_EVENT,
@@ -124,14 +123,12 @@ class AutoThermostat(RestoreClimate):
         self._button: str | None = values.get(CONF_BUTTON_EVENT)
         self._short_press = str(values.get(CONF_SHORT_PRESS, DEFAULT_SHORT_PRESS)).strip()
         self._long_press = str(values.get(CONF_LONG_PRESS, DEFAULT_LONG_PRESS)).strip()
-        self._cooling = bool(values.get(CONF_AC_MODE, False))
-        self._run_mode = HVACMode.COOL if self._cooling else HVACMode.HEAT
-        self._attr_hvac_modes = [self._run_mode, HVACMode.OFF]
-        initial_mode = values.get(CONF_INITIAL_HVAC_MODE, self._run_mode)
+        self._attr_hvac_modes = [HVACMode.HEAT, HVACMode.OFF]
+        initial_mode = values.get(CONF_INITIAL_HVAC_MODE, HVACMode.HEAT)
         self._hvac_mode = (
             HVACMode(initial_mode)
-            if initial_mode in (self._run_mode, HVACMode.OFF)
-            else self._run_mode
+            if initial_mode in (HVACMode.HEAT, HVACMode.OFF)
+            else HVACMode.OFF
         )
 
         self._min_temp = float(values[CONF_MIN_TEMP])
@@ -160,7 +157,7 @@ class AutoThermostat(RestoreClimate):
 
         self._boost_until: datetime | None = None
         self._boost_previous_preset = PRESET_HOME
-        self._boost_previous_hvac = self._run_mode
+        self._boost_previous_hvac = HVACMode.HEAT
         self._last_transition: datetime | None = None
         self._max_cycle_blocked = False
         self._lock = asyncio.Lock()
@@ -197,7 +194,7 @@ class AutoThermostat(RestoreClimate):
         if self._hvac_mode == HVACMode.OFF:
             return HVACAction.OFF
         if self._is_heater_on():
-            return HVACAction.COOLING if self._cooling else HVACAction.HEATING
+            return HVACAction.HEATING
         return HVACAction.IDLE
 
     @property
@@ -428,7 +425,7 @@ class AutoThermostat(RestoreClimate):
             self._boost_previous_hvac = self._hvac_mode
         self._boost_until = dt_util.utcnow() + self._boost_duration
         self._attr_preset_mode = PRESET_BOOST
-        self._hvac_mode = self._run_mode
+        self._hvac_mode = HVACMode.HEAT
         self._max_cycle_blocked = False
         self._schedule_boost()
         await self._async_control()
@@ -569,11 +566,10 @@ class AutoThermostat(RestoreClimate):
                     current=self._cur_temp,
                     target=self._target,
                     active=is_on,
-                    cooling=self._cooling,
                     cold_tolerance=self._cold_tolerance,
                     hot_tolerance=self._hot_tolerance,
                 )
-                # No valid sensors: stop heating/cooling rather than run blind.
+                # No valid sensors: stop heating rather than run blind.
                 if desired is None:
                     desired = False
                     force_off = True

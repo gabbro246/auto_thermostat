@@ -27,7 +27,6 @@ def fake_module(path: str, **values: object) -> ModuleType:
 
 class Mode(StrEnum):
     HEAT = "heat"
-    COOL = "cool"
     OFF = "off"
 
 
@@ -35,7 +34,6 @@ class Action(StrEnum):
     OFF = "off"
     IDLE = "idle"
     HEATING = "heating"
-    COOLING = "cooling"
 
 
 class Feature(IntFlag):
@@ -259,7 +257,20 @@ class TestThermostat(unittest.IsolatedAsyncioTestCase):
     async def test_average_and_initial_heat(self) -> None:
         self.assertEqual(self.thermostat.native_current_temperature, 20)
         self.assertEqual(self.thermostat.native_target_temperature, 21)
+        self.assertEqual(self.thermostat._attr_hvac_modes, [Mode.HEAT, Mode.OFF])
+        self.assertEqual(self.thermostat.hvac_action, Action.HEATING)
         self.assertTrue(self.hass.states.is_state("switch.heat", "on"))
+
+    async def test_unsupported_saved_mode_starts_off(self) -> None:
+        entry = SimpleNamespace(
+            entry_id="old-entry",
+            data={**self.entry.data, "initial_hvac_mode": "unsupported"},
+            options={},
+        )
+
+        thermostat = self.climate.AutoThermostat(self.hass, entry)
+
+        self.assertEqual(thermostat.hvac_mode, Mode.OFF)
 
     async def test_presence_switches_to_away(self) -> None:
         self.hass.change("person.a", "not_home")

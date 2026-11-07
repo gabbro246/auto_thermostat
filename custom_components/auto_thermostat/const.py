@@ -32,7 +32,6 @@ CONF_KEEP_ALIVE: Final = "keep_alive"
 CONF_PRECISION: Final = "precision"
 CONF_TARGET_STEP: Final = "target_temp_step"
 CONF_INITIAL_HVAC_MODE: Final = "initial_hvac_mode"
-CONF_AC_MODE: Final = "ac_mode"
 
 PRESET_HOME: Final = "home"
 PRESET_AWAY: Final = "away"

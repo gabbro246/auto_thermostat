@@ -10,7 +10,6 @@ from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.const import UnitOfTemperature
 from homeassistant.core import callback
 from homeassistant.helpers.selector import (
-    BooleanSelector,
     EntitySelector,
     EntitySelectorConfig,
     NumberSelector,
@@ -22,7 +21,6 @@ from homeassistant.helpers.selector import (
 )
 
 from .const import (
-    CONF_AC_MODE,
     CONF_AWAY_TEMP,
     CONF_BOOST_DURATION,
     CONF_BUTTON_EVENT,
@@ -57,15 +55,15 @@ from .logic import replace_options
 
 def _number(minimum: float, maximum: float, step: float, unit: str | None = None) -> NumberSelector:
     """Render a number box with the specified units."""
-    return NumberSelector(
-        NumberSelectorConfig(
-            min=minimum,
-            max=maximum,
-            step=step,
-            unit_of_measurement=unit,
-            mode=NumberSelectorMode.BOX,
-        )
+    config = NumberSelectorConfig(
+        min=minimum,
+        max=maximum,
+        step=step,
+        mode=NumberSelectorMode.BOX,
     )
+    if unit is not None:
+        config["unit_of_measurement"] = unit
+    return NumberSelector(config)
 
 
 def _suggested(key: str, values: dict[str, Any]) -> Any:
@@ -94,16 +92,12 @@ def _devices_schema(values: dict[str, Any]) -> vol.Schema:
             _suggested(CONF_PERSONS, values): EntitySelector(
                 EntitySelectorConfig(domain=["person", "device_tracker"], multiple=True)
             ),
-            vol.Required(CONF_AC_MODE, default=values.get(CONF_AC_MODE, False)): BooleanSelector(),
         }
     )
 
 
 def _presets_schema(values: dict[str, Any], fahrenheit: bool) -> vol.Schema:
-    if values.get(CONF_AC_MODE):
-        home, away, sleep = ((75, 80, 77) if fahrenheit else (24, 27, 25))
-    else:
-        home, away, sleep = ((68, 60, 65) if fahrenheit else (20, 16, 18))
+    home, away, sleep = ((68, 60, 65) if fahrenheit else (20, 16, 18))
     return vol.Schema(
         {
             vol.Required(CONF_HOME_TEMP, default=values.get(CONF_HOME_TEMP, home)): _number(-40, 150, 0.5),
@@ -119,12 +113,9 @@ def _presets_schema(values: dict[str, Any], fahrenheit: bool) -> vol.Schema:
 
 def _control_schema(values: dict[str, Any], fahrenheit: bool) -> vol.Schema:
     min_temp, max_temp, target_temp = ((45, 86, 68) if fahrenheit else (7, 35, 20))
-    if values.get(CONF_AC_MODE):
-        target_temp = 75 if fahrenheit else 24
-    mode = "cool" if values.get(CONF_AC_MODE) else "heat"
-    initial_mode = values.get(CONF_INITIAL_HVAC_MODE, mode)
-    if initial_mode not in (mode, "off"):
-        initial_mode = mode
+    initial_mode = values.get(CONF_INITIAL_HVAC_MODE, "heat")
+    if initial_mode not in ("heat", "off"):
+        initial_mode = "heat"
     return vol.Schema(
         {
             vol.Required(CONF_MIN_TEMP, default=values.get(CONF_MIN_TEMP, min_temp)): _number(-40, 150, 0.5),
@@ -133,7 +124,7 @@ def _control_schema(values: dict[str, Any], fahrenheit: bool) -> vol.Schema:
             vol.Required(
                 CONF_INITIAL_HVAC_MODE,
                 default=initial_mode,
-            ): SelectSelector(SelectSelectorConfig(options=[mode, "off"])),
+            ): SelectSelector(SelectSelectorConfig(options=["heat", "off"])),
             vol.Required(
                 CONF_COLD_TOLERANCE,
                 default=values.get(CONF_COLD_TOLERANCE, DEFAULT_TOLERANCE),
@@ -316,7 +307,7 @@ class AutoThermostatOptionsFlow(config_entries.OptionsFlow):
         """Edit the heater, sensors or people."""
         if user_input is not None:
             return self._save(
-                {CONF_NAME, CONF_HEATER, CONF_TEMP_SENSORS, CONF_PERSONS, CONF_AC_MODE},
+                {CONF_NAME, CONF_HEATER, CONF_TEMP_SENSORS, CONF_PERSONS},
                 user_input,
             )
         return self.async_show_form(

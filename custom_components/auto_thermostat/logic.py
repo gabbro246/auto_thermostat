@@ -38,19 +38,12 @@ def should_run(
     current: float | None,
     target: float | None,
     active: bool,
-    cooling: bool,
     cold_tolerance: float,
     hot_tolerance: float,
 ) -> bool | None:
-    """Apply Generic Thermostat's hysteresis (None means missing temperature)."""
+    """Apply heating hysteresis (None means missing temperature)."""
     if current is None or target is None:
         return None
-    if cooling:
-        return (
-            current > target + hot_tolerance
-            if not active
-            else current > target - cold_tolerance
-        )
     return (
         current < target - cold_tolerance
         if not active

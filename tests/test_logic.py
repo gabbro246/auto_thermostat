@@ -43,7 +43,7 @@ class TestHysteresis(unittest.TestCase):
     def test_heating_switch_on_and_off(self) -> None:
         def heat(current: float | None, active: bool) -> bool | None:
             return logic.should_run(
-                current=current, target=20, active=active, cooling=False,
+                current=current, target=20, active=active,
                 cold_tolerance=0.3, hot_tolerance=0.3,
             )
 
@@ -52,19 +52,6 @@ class TestHysteresis(unittest.TestCase):
         self.assertTrue(heat(20.1, True))
         self.assertFalse(heat(20.3, True))
         self.assertIsNone(heat(None, False))
-
-    def test_cooling_switch_on_and_off(self) -> None:
-        def cool(current: float, active: bool) -> bool | None:
-            return logic.should_run(
-                current=current, target=20, active=active, cooling=True,
-                cold_tolerance=0.3, hot_tolerance=0.3,
-            )
-
-        self.assertTrue(cool(21, False))
-        self.assertFalse(cool(20.1, False))
-        self.assertTrue(cool(19.9, True))
-        self.assertFalse(cool(19.7, True))
-
 
 class TestButton(unittest.TestCase):
     def test_short_starts_and_long_cancels(self) -> None:
